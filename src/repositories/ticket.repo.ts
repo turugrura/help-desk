@@ -1,7 +1,10 @@
-import { TicketDomain } from "src/domain/ticket.domain";
+import { ApiProperty } from "@nestjs/swagger";
+import { TicketStatus } from "../domain/ticket";
+import { TicketDomain } from "../domain/ticket.domain";
 
-export interface GetAllParams {
-    status: string
+export class GetAllParams {
+    @ApiProperty({ enum: ["pending", "accepted", "resolved", "rejected"] })
+    status?: TicketStatus
 }
 
 export abstract class TicketRepo {

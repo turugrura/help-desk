@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { JsonDB } from 'node-json-db';
+import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TicketController } from './controllers/ticket.controller';
@@ -12,7 +14,7 @@ import { TicketService } from './services/ticket.service';
   providers: [
     AppService,
     TicketService,
-    { provide: TicketRepo, useClass: TicketJsonDbRepo }
+    { provide: TicketRepo, useValue: new TicketJsonDbRepo(new JsonDB(new Config("myDataBase", true, false, '/'))) }
   ],
 })
 export class AppModule { }

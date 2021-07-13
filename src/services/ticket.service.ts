@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { CreateTicketModel, TicketModel, UpdateTicketModel } from "src/domain/ticket";
-import { TicketDomain } from "src/domain/ticket.domain";
-import { GetAllParams, TicketRepo } from "src/repositories/ticket.repo";
+import { CreateTicketModel, TicketModel, UpdateTicketModel } from "../domain/ticket";
+import { TicketDomain } from "../domain/ticket.domain";
+import { GetAllParams, TicketRepo } from "../repositories/ticket.repo";
 
 @Injectable()
 export class TicketService {
@@ -27,15 +27,16 @@ export class TicketService {
         const ticket = new TicketDomain()
         ticket.create(model)
         this.ticketRepo.create(ticket)
-        if (!ticket) {
-            return null
-        }
 
         return ticket.toModel()
     }
 
     update(id: number, model: UpdateTicketModel): TicketModel {
         const ticket = this.ticketRepo.getOne(id)
+        if (!ticket) {
+            throw new Error("ticket not found");
+        }
+
         ticket.update(model)
         this.ticketRepo.update(ticket)
         if (!ticket) {

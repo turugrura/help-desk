@@ -33,7 +33,6 @@ export class TicketDomain {
         this.title = model.title
         this.description = model.description
         this.contact_information = model.contact_information
-        this.status = 'pending'
         this.created_at = Date.now()
         this.updated_at = Date.now()
 
@@ -43,7 +42,7 @@ export class TicketDomain {
     // Update a ticket’s information and status (pending, accepted, resolved, rejected). 
     update(model: UpdateTicketModel): this {
         const statuses: TicketStatus[] = ['pending', 'accepted', 'resolved', 'rejected']
-        if (!statuses.includes(model.status)) {
+        if (model.status && !statuses.includes(model.status)) {
             throw new Error(`status ${model.status} is not allowed`)
         }
 

@@ -1,18 +1,14 @@
-import { TicketDomain } from "src/domain/ticket.domain";
+import { TicketDomain } from "../domain/ticket.domain";
 import { GetAllParams, TicketRepo } from "./ticket.repo";
 import { Injectable } from "@nestjs/common";
 import { JsonDB } from 'node-json-db';
-import { Config } from 'node-json-db/dist/lib/JsonDBConfig'
-import { Ticket } from "src/domain/ticket";
+import { Ticket } from "../domain/ticket";
 
 @Injectable()
 export class TicketJsonDbRepo implements TicketRepo {
-    private db: JsonDB
     private readonly path = '/tickets'
 
-    constructor() {
-        this.db = new JsonDB(new Config("myDataBase", true, false, '/'));
-    }
+    constructor(private db: JsonDB) { }
 
     getOne(id: number): TicketDomain {
         const index = this.db.getIndex(this.path, id)
@@ -29,9 +25,25 @@ export class TicketJsonDbRepo implements TicketRepo {
     }
 
     getAll(param: GetAllParams): TicketDomain[] {
-        const tickets: Ticket[] = this.db.getData(this.path)
+        let tickets: Ticket[] = this.db.getData(this.path)
 
-        return tickets.map(ticket => new TicketDomain().loadTicket(ticket))
+        if (param.status) {
+            tickets = tickets.filter(a => a.status === param.status);
+        }
+
+        return tickets
+            .sort((a, b) => {
+                if (a.status === b.status) {
+                    return a.updated_at - b.updated_at
+                }
+
+                if (a.status < b.status) {
+                    return -1
+                }
+
+                return 1
+            })
+            .map(ticket => new TicketDomain().loadTicket(ticket))
     }
 
     create(domain: TicketDomain): TicketDomain {

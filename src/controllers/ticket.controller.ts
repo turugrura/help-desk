@@ -1,14 +1,14 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, Req } from '@nestjs/common';
-import { CreateTicketModel, TicketModel, UpdateTicketModel } from 'src/domain/ticket';
-import { GetAllParams } from 'src/repositories/ticket.repo';
-import { TicketService } from 'src/services/ticket.service';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, Query, Req } from '@nestjs/common';
+import { CreateTicketModel, TicketModel, UpdateTicketModel } from '../domain/ticket';
+import { GetAllParams } from '../repositories/ticket.repo';
+import { TicketService } from '../services/ticket.service';
 
 @Controller('tickets')
 export class TicketController {
     constructor(private readonly ticketService: TicketService) { }
 
     @Get()
-    getTickets(@Param() params: GetAllParams) {
+    getTickets(@Query() params: GetAllParams) {
         return this.ticketService.getAll(params);
     }
 

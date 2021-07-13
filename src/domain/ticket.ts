@@ -7,7 +7,7 @@ export class Ticket {
     title?: string
     description?: string
     contact_information?: string
-    status: TicketStatus
+    status?: TicketStatus
     created_at: number
     updated_at: number
 }
@@ -35,5 +35,5 @@ export class CreateTicketModel {
 
 export class UpdateTicketModel extends CreateTicketModel {
     @ApiProperty()
-    status: TicketStatus
+    status?: TicketStatus
 }
